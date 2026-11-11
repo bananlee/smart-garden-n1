@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>🌱 Smart Agriculture</h1>
+        <p>Fermer xo‘jaligini boshqarish tizimi</p>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <h2>Xush kelibsiz!</h2>
+            <p>Aqlli qishloq xo‘jaligi boshqaruv paneli</p>
+        </section>
+
+        <section class="statistics">
+            <div class="card">
+                <h3>Yer maydoni</h3>
+                <p>0 gektar</p>
+            </div>
+
+            <div class="card">
+                <h3>Ekinlar soni</h3>
+                <p id="cropCount">0</p>
+            </div>
+
+            <div class="card">
+                <h3>Hosil miqdori</h3>
+                <p>0 tonna</p>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <h2>Yangi ekin qo‘shish</h2>
+
+            <form id="cropForm">
+                <input
+                    type="text"
+                    id="cropName"
+                    placeholder="Ekin nomi"
+                    required
+                >
+
+                <input
+                    type="number"
+                    id="cropArea"
+                    placeholder="Yer maydoni (gektar)"
+                    min="0.1"
+                    step="0.1"
+                    required
+                >
+
+                <button type="submit">Ekin qo‘shish</button>
+            </form>
+        </section>
+
+        <section class="table-section">
+            <h2>Ekinlar ro‘yxati</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Ekin nomi</th>
+                        <th>Maydon (gektar)</th>
+                    </tr>
+                </thead>
+
+                <tbody id="cropList">
+                </tbody>
+            </table>
+
+            <p id="message">Hozircha ekinlar mavjud emas.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Smart Agriculture Farm Management System © 2026</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
