@@ -3,53 +3,64 @@ const cropList = document.getElementById("cropList");
 const cropCount = document.getElementById("cropCount");
 const message = document.getElementById("message");
 
-let crops = [];
+async function loadCrops() {
+    try {
+        const response = await fetch("/api/crops");
+        const crops = await response.json();
+        showCrops(crops);
+    } catch (error) {
+        message.textContent = "Server bilan aloqa yo'q.";
+    }
+}
 
-cropForm.addEventListener("submit", function(event) {
+cropForm.addEventListener("submit", async function(event) {
     event.preventDefault();
 
-    const name = document.getElementById("cropName").value;
+    const name = document.getElementById("cropName").value.trim();
     const area = Number(document.getElementById("cropArea").value);
 
-    if (name.trim() === "" || area <= 0) {
+    if (!name || !Number.isFinite(area) || area <= 0) {
         alert("Ma'lumotlarni to'g'ri kiriting!");
         return;
     }
 
-    const crop = {
-        name: name,
-        area: area
-    };
+    try {
+        const response = await fetch("/api/crops", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, area })
+        });
 
-    crops.push(crop);
+        if (!response.ok) {
+            throw new Error("Ma'lumot saqlanmadi");
+        }
 
-    showCrops();
-
-    cropForm.reset();
+        cropForm.reset();
+        await loadCrops();
+    } catch (error) {
+        message.textContent = "Ma'lumot yuborishda xatolik!";
+    }
 });
 
-function showCrops() {
+function showCrops(crops) {
     cropList.innerHTML = "";
 
-    crops.forEach(function(crop, index) {
+    crops.forEach((crop, index) => {
         const row = document.createElement("tr");
 
-        const numberCell = document.createElement("td");
-        numberCell.textContent = index + 1;
+        [index + 1, crop.name, crop.area + " gektar"].forEach(value => {
+            const cell = document.createElement("td");
+            cell.textContent = value;
+            row.appendChild(cell);
+        });
 
-        const nameCell = document.createElement("td");
-        nameCell.textContent = crop.name;
-
-        const areaCell = document.createElement("td");
-        areaCell.textContent = crop.area + " gektar";
-
-        row.append(numberCell, nameCell, areaCell);
         cropList.appendChild(row);
     });
 
     cropCount.textContent = crops.length;
-
-    message.textContent = crops.length === 0
-        ? "Hozircha ekinlar mavjud emas."
-        : "Jami " + crops.length + " ta ekin mavjud.";
+    message.textContent = crops.length
+        ? "Jami " + crops.length + " ta ekin mavjud."
+        : "Hozircha ekinlar mavjud emas.";
 }
+
+loadCrops();
